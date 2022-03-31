@@ -24,8 +24,8 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
     for _, item_1 := range [3]int{0,1,2} {
         for _, item_2 := range [3]int{0,1,2} {
             if tempArr[item_1][item_2] == "_" {
-                var temp_string = string(item_1 + 48) + string(item_2 + 65)
-                // fmt.Println(temp_string)
+                var temp_string = string(item_1 + 65) + string(item_2 + 48)
+                fmt.Println(temp_string)
                 l.PushFront(temp_string)
             }
         }
@@ -86,6 +86,7 @@ func main() {
     var o_win = DidAnyoneWin(tttArr, "O")
 
     for !(x_win || o_win) {
+        var next_move = ""
         if next_turn == "X" {
 
 
@@ -109,35 +110,34 @@ func main() {
 
             fmt.Printf("Move for computer is: ")
             fmt.Println(available.Front().Value)
-            
 
-            // fmt.Println(availableMoves)
-            //TODO: get random position for computer to play
-            break
-
+            next_move = available.Front().Value.(string)
         } else {
             fmt.Println("What position for O? ")            
 
             fmt.Println("Put next move in format \"D3\"")
 
-            next_move, _ := reader.ReadString('\n')
-            fmt.Printf("Next move is %s\n", next_move)
+            read_string, _ := reader.ReadString('\n')
+            next_move = read_string
+            fmt.Printf("Next human move is %s\n", next_move)
 
             fmt.Printf("")
 
             if next_move == "Exit\n" {
                 break
             }
+        }
 
-            if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
-                fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
-            } else if next_turn == "X" {
-                tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-                next_turn = "O"
-            } else {
-                tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-                next_turn = "X"
-            }
+
+
+        if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
+            fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
+        } else if next_turn == "X" {
+            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+            next_turn = "O"
+        } else {
+            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+            next_turn = "X"
         }
 
 
