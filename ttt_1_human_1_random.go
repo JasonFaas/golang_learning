@@ -6,6 +6,7 @@ import (
     "time"
     "bufio"
     "os"
+    "container/list"
     // "strings"
 )
 
@@ -16,6 +17,20 @@ func PrintTableState(tempArr [3][3]string) () {
         fmt.Printf(" ")
         fmt.Println(tempArr[itr])
     }
+}
+
+func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
+    l := list.New()
+    for _, item_1 := range [3]int{0,1,2} {
+        for _, item_2 := range [3]int{0,1,2} {
+            if tempArr[item_1][item_2] == "_" {
+                var temp_string = string(item_1 + 48) + string(item_2 + 65)
+                fmt.Println(temp_string)
+                l.PushFront(temp_string)
+            }
+        }
+    }
+    return l
 }
 
 func DidAnyoneWin(tempArr [3][3]string, whoWon string) (bool) {
@@ -72,34 +87,38 @@ func main() {
 
     for !(x_win || o_win) {
         if next_turn == "X" {
-            fmt.Println("What position for X? ")
-        } else {
-            fmt.Println("What position for O? ")
-        }
+            fmt.Printf("Move for computer is: ")
+            
 
-        fmt.Println("Put next move in format \"D3\"")
 
-        next_move, _ := reader.ReadString('\n')
-        fmt.Printf("Next move is %s\n", next_move)
-
-        // var example_string = "D3\n"
-        // fmt.Printf("ascii value of letter: %d\n", example_string[0])
-        // fmt.Printf("ascii value of number: %d\n", example_string[1])
-
-        fmt.Printf("")
-
-        if next_move == "Exit\n" {
+            ListAvailableMoves(tttArr)
+            // fmt.Println(availableMoves)
+            //TODO: get random position for computer to play
             break
-        }
 
-        if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
-            fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
-        } else if next_turn == "X" {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "O"
         } else {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "X"
+            fmt.Println("What position for O? ")            
+
+            fmt.Println("Put next move in format \"D3\"")
+
+            next_move, _ := reader.ReadString('\n')
+            fmt.Printf("Next move is %s\n", next_move)
+
+            fmt.Printf("")
+
+            if next_move == "Exit\n" {
+                break
+            }
+
+            if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
+                fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
+            } else if next_turn == "X" {
+                tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+                next_turn = "O"
+            } else {
+                tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+                next_turn = "X"
+            }
         }
 
 
