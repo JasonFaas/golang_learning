@@ -4,13 +4,16 @@ import (
     "fmt"   
     "math/rand"
     "time"
-    // "bufio"
-    // "os"
+    "bufio"
+    "os"
     // "strings"
 )
 
 func PrintTableState(tempArr [3][3]string) () {
+    fmt.Println("   A B C")
     for itr, _ := range tempArr {
+        fmt.Printf("%d", itr)
+        fmt.Printf(" ")
         fmt.Println(tempArr[itr])
     }
 }
@@ -37,6 +40,8 @@ func DidAnyoneWin(tempArr [3][3]string, whoWon string) (bool) {
 
 func main() {
 
+    reader := bufio.NewReader(os.Stdin)
+
     // TODO: V1
 
     // double 3x3 array
@@ -46,24 +51,69 @@ func main() {
     rand.Seed(time.Now().UnixNano())
     for vk, v := range tttArr {
         for vvk, _ := range v {
-            var value = rand.Intn(2)
-            if value == 0 {                
-                tttArr[vk][vvk] = "X"
-            } else {                
-                tttArr[vk][vvk] = "O"
-            }
+            // var value = rand.Intn(3)
+            tttArr[vk][vvk] = "_"
+            // if value == 0 {                                
+            //     tttArr[vk][vvk] = "X"
+            // } else if value == 1 {                
+            //     tttArr[vk][vvk] = "O"
+            // }
         }
     }
 
     // print random array
     PrintTableState(tttArr)
 
-    // did anyone win?
+    var next_turn = "X"
 
-    if DidAnyoneWin(tttArr, "X") {
+    // did anyone win?
+    var x_win = DidAnyoneWin(tttArr, "X")
+    var o_win = DidAnyoneWin(tttArr, "O")
+
+    for !(x_win || o_win) {
+        if next_turn == "X" {
+            fmt.Println("What position for X? ")
+        } else {
+            fmt.Println("What position for O? ")
+        }
+
+        fmt.Println("Put next move in format \"D3\"")
+
+        next_move, _ := reader.ReadString('\n')
+        fmt.Printf("Next move is %s\n", next_move)
+
+        // var example_string = "D3\n"
+        // fmt.Printf("ascii value of letter: %d\n", example_string[0])
+        // fmt.Printf("ascii value of number: %d\n", example_string[1])
+
+        fmt.Printf("")
+
+        if next_move == "Exit\n" {
+            break
+        }
+
+        if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
+            fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
+        } else if next_turn == "X" {
+            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+            next_turn = "O"
+        } else {
+            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
+            next_turn = "X"
+        }
+
+
+
+        PrintTableState(tttArr)
+
+        x_win = DidAnyoneWin(tttArr, "X")
+        o_win = DidAnyoneWin(tttArr, "O")
+    }
+
+    if x_win {
         fmt.Println("X won")
     }
-    if DidAnyoneWin(tttArr, "O") {
+    if o_win {
         fmt.Println("O won")
     }
 
