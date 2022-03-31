@@ -25,7 +25,7 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
         for _, item_2 := range [3]int{0,1,2} {
             if tempArr[item_1][item_2] == "_" {
                 var temp_string = string(item_1 + 48) + string(item_2 + 65)
-                fmt.Println(temp_string)
+                // fmt.Println(temp_string)
                 l.PushFront(temp_string)
             }
         }
@@ -87,11 +87,30 @@ func main() {
 
     for !(x_win || o_win) {
         if next_turn == "X" {
-            fmt.Printf("Move for computer is: ")
+
+
+            var available = ListAvailableMoves(tttArr)
+
+            if available.Len() == 0 {
+                fmt.Println("No avilable moves")
+                break
+            }
+
+            var move_to_make_itr = rand.Intn(available.Len())
+            fmt.Printf("Move to make random %d\n", move_to_make_itr)
             
 
+            for move_to_make_itr > 0 {
+                fmt.Printf("Removing element %d\n", move_to_make_itr)
+                available.Remove(available.Front())
+                move_to_make_itr -= 1
+            }
 
-            ListAvailableMoves(tttArr)
+
+            fmt.Printf("Move for computer is: ")
+            fmt.Println(available.Front().Value)
+            
+
             // fmt.Println(availableMoves)
             //TODO: get random position for computer to play
             break
