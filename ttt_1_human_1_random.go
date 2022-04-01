@@ -54,6 +54,24 @@ func DidAnyoneWin(tempArr [3][3]string, whoWon string) (bool) {
     return false
 }
 
+func DecideMoveRandom(available *list.List) (string) {
+    var move_to_make_itr = rand.Intn(available.Len())
+    fmt.Printf("Move to make random %d\n", move_to_make_itr)
+    
+
+    for move_to_make_itr > 0 {
+        // fmt.Printf("Removing element %d\n", move_to_make_itr)
+        available.Remove(available.Front())
+        move_to_make_itr -= 1
+    }
+
+
+    fmt.Printf("Move for computer is: ")
+    fmt.Println(available.Front().Value)
+
+    return available.Front().Value.(string)
+}
+
 
 func main() {
 
@@ -99,21 +117,9 @@ func main() {
                 break
             }
 
-            var move_to_make_itr = rand.Intn(available.Len())
-            fmt.Printf("Move to make random %d\n", move_to_make_itr)
+            next_move = DecideMoveRandom(available)
+
             
-
-            for move_to_make_itr > 0 {
-                // fmt.Printf("Removing element %d\n", move_to_make_itr)
-                available.Remove(available.Front())
-                move_to_make_itr -= 1
-            }
-
-
-            fmt.Printf("Move for computer is: ")
-            fmt.Println(available.Front().Value)
-
-            next_move = available.Front().Value.(string)
         } else {
             fmt.Println("What position for O? ")            
 
