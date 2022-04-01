@@ -35,23 +35,27 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
     return l
 }
 
-func DidAnyoneWin(tempArr [3][3]string, whoWon string) (bool) {
-    for _, item := range [3]int{0,1,2} {
-        if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
-            return true
+func DidAnyoneWin(tempArr [3][3]string) (string) {
+    time.Sleep(1 * time.Second)
+    for _, whoWon := range [2]string{"X", "0"} {
+        for _, item := range [3]int{0,1,2} {
+            if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
+                return whoWon
+            }
+            if tempArr[0][item] == whoWon && tempArr[1][item] == whoWon && tempArr[2][item] == whoWon {
+                return whoWon
+            }
         }
-        if tempArr[0][item] == whoWon && tempArr[1][item] == whoWon && tempArr[2][item] == whoWon {
-            return true
-        }
-    }
 
-    if tempArr[0][0] == whoWon && tempArr[1][1] == whoWon && tempArr[2][2] == whoWon {
-        return true
+        if tempArr[0][0] == whoWon && tempArr[1][1] == whoWon && tempArr[2][2] == whoWon {
+            return whoWon
+        }
+        if tempArr[0][2 - 0] == whoWon && tempArr[1][2 - 1] == whoWon && tempArr[2][2 - 2] == whoWon {
+            return whoWon
+        }
     }
-    if tempArr[0][2 - 0] == whoWon && tempArr[1][2 - 1] == whoWon && tempArr[2][2 - 2] == whoWon {
-        return true
-    }
-    return false
+    
+    return "_"
 }
 
 func DecideMoveRandom(available *list.List) (string) {
@@ -81,13 +85,12 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
         var next_move = test_move.Value.(string)
 
         tempArr[next_move[1]-48][next_move[0]-65] = "X"
-        if DidAnyoneWin(tempArr, "X") {
+        if DidAnyoneWin(tempArr) == "X" {
             return next_move
         }
 
         tempArr[next_move[1]-48][next_move[0]-65] = "O"
-        if DidAnyoneWin(tempArr, "O") {
-            // TODO: Instead of below, add blocking moves
+        if DidAnyoneWin(tempArr) == "0" {
             blockingMoves.PushFront(next_move)
         }
 
@@ -136,15 +139,16 @@ func main() {
     var next_turn = "X"
 
     // did anyone win?
-    var x_win = DidAnyoneWin(tttArr, "X")
-    var o_win = DidAnyoneWin(tttArr, "O")
+    var winner = DidAnyoneWin(tttArr)
 
-    for !(x_win || o_win || ListAvailableMoves(tttArr).Len() == 0) {
+    var available = ListAvailableMoves(tttArr)
+
+    for winner == "_" && available.Len() > 0 {
         var next_move = ""
         if next_turn == "X" {
 
 
-            var available = ListAvailableMoves(tttArr)
+            
 
             if available.Len() == 0 {
                 fmt.Println("No avilable moves")
@@ -184,18 +188,17 @@ func main() {
         }
 
 
-
         PrintTableState(tttArr)
 
-        x_win = DidAnyoneWin(tttArr, "X")
-        o_win = DidAnyoneWin(tttArr, "O")
+        winner = DidAnyoneWin(tttArr)
+
+        available = ListAvailableMoves(tttArr)
     }
 
-    if x_win {
-        fmt.Println("X won")
-    }
-    if o_win {
-        fmt.Println("O won")
+    if winner != "_" {
+        fmt.Printf("%s won!!!\n", winner)
+    } else {
+        fmt.Printf("Tie :(\n")
     }
 
     // exit program
