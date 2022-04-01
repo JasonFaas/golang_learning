@@ -139,7 +139,7 @@ func main() {
     var next_turn = "X"
 
     // did anyone win?
-    var winner = DidAnyoneWin(tttArr)
+    var winner = "_"
 
     var available = ListAvailableMoves(tttArr)
 
