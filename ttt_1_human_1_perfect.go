@@ -73,20 +73,34 @@ func DecideMoveRandom(available *list.List) (string) {
 }
 
 func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
+    blockingMoves := list.New()
 
     // TODO: Loop through all scenarios and determine if winning move available, then return that move
     var test_move = available.Front()
-    for test_move != nil {
+    for test_move != nil && available.Len() > 1 {
         var next_move = test_move.Value.(string)
-        fmt.Println("What")
-        fmt.Println(next_move)
+
         tempArr[next_move[1]-48][next_move[0]-65] = "X"
         if DidAnyoneWin(tempArr, "X") {
             return next_move
-        } else {
-            tempArr[next_move[1]-48][next_move[0]-65] = "_"
         }
+
+        tempArr[next_move[1]-48][next_move[0]-65] = "O"
+        if DidAnyoneWin(tempArr, "O") {
+            // TODO: Instead of below, add blocking moves
+            blockingMoves.PushFront(next_move)
+        }
+
+
+        tempArr[next_move[1]-48][next_move[0]-65] = "_"
         test_move = test_move.Next()
+
+        fmt.Printf("%d blockingMoves\n", blockingMoves.Len())
+    }
+
+    if blockingMoves.Len() > 0 {
+        fmt.Println("Getting blocking move")
+        return blockingMoves.Front().Value.(string)
     }
 
     return DecideMoveRandom(available)
