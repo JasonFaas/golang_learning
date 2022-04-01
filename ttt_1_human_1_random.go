@@ -20,16 +20,18 @@ func PrintTableState(tempArr [3][3]string) () {
 }
 
 func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
+    fmt.Println("Availabe Moves:")
     l := list.New()
     for _, item_1 := range [3]int{0,1,2} {
         for _, item_2 := range [3]int{0,1,2} {
-            if tempArr[item_1][item_2] == "_" {
+            if tempArr[item_2][item_1] == "_" {
                 var temp_string = string(item_1 + 65) + string(item_2 + 48)
                 fmt.Println(temp_string)
                 l.PushFront(temp_string)
             }
         }
     }
+    fmt.Println("Availabe Moves Over\n\n")
     return l
 }
 
@@ -85,7 +87,7 @@ func main() {
     var x_win = DidAnyoneWin(tttArr, "X")
     var o_win = DidAnyoneWin(tttArr, "O")
 
-    for !(x_win || o_win) {
+    for !(x_win || o_win || ListAvailableMoves(tttArr).Len() == 0) {
         var next_move = ""
         if next_turn == "X" {
 
@@ -102,7 +104,7 @@ func main() {
             
 
             for move_to_make_itr > 0 {
-                fmt.Printf("Removing element %d\n", move_to_make_itr)
+                // fmt.Printf("Removing element %d\n", move_to_make_itr)
                 available.Remove(available.Front())
                 move_to_make_itr -= 1
             }
