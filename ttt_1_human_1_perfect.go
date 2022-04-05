@@ -55,8 +55,10 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
 }
 
 func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting) () {
-    var whathwat = rand.Intn(8) - 10
-    move_consider.future_score <- whathwat
+    var result = rand.Intn(8) - 10
+    
+
+    fmt.Println("Fix this method!!")
 
     //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
     //         return next_move.notation
@@ -65,6 +67,12 @@ func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting) () {
     //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
     //         blockingMoves.PushFront(next_move)
     //     }
+
+
+    os.Exit(19)
+    
+    move_consider.future_score <- result
+
 }
 
 func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_position_y int, next_move_value string) (string) {
