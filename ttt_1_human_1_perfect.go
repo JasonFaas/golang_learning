@@ -46,7 +46,7 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
                     actual_score: 0,
                 }
 
-                l.PushFront(new_move)
+                l.PushFront(&new_move)
             }
         }
     }
@@ -54,8 +54,8 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
     return l
 }
 
-func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider MoveTesting) () {
-    var whathwat = 0
+func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting) () {
+    var whathwat = 3
     move_consider.future_score <- whathwat
 
     //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
@@ -118,13 +118,19 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     // TODO: Loop through all scenarios and determine if winning move available, then return that move
 
     var test_move = available.Front()
+    // fmt.Printf("WHAT IS GOING ON!? %d %s\n", available.Len(), test_move)
+    
 
     for test_move != nil && available.Len() > 1 {
-        var next_move = test_move.Value.(MoveTesting)
+        var next_move = test_move.Value.(*MoveTesting)
+        fmt.Printf("%T\n", next_move)
+
         next_move.move_letter = "X"
-        fmt.Printf("Should be equal: %s %s \n", next_move.move_letter, test_move.Value.(MoveTesting).move_letter)
-        if next_move.move_letter != test_move.Value.(MoveTesting).move_letter {
-            os.Exit(1)
+
+        fmt.Printf("WHATTTTT %s %s\n", test_move.Value.(*MoveTesting).move_letter, next_move.move_letter)
+        
+        if test_move.Value.(*MoveTesting).move_letter != next_move.move_letter {
+            os.Exit(1)            
         }
 
         go WouldAnyoneWinStruct(tempArr, next_move)
@@ -156,12 +162,13 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     //     return blockingMoves.Front().Value.(MoveTesting).notation
     // }
 
-    var best_move = available.Front().Value.(MoveTesting)
+    var best_move = available.Front().Value.(*MoveTesting)
     best_move.actual_score = <-best_move.future_score
+    fmt.Printf("MOREE %d\n", best_move.actual_score)
 
-    test_move = available.Front()
+    test_move = available.Front().Next()
     for test_move != nil && available.Len() > 1 {
-        var next_move = test_move.Value.(MoveTesting)
+        var next_move = test_move.Value.(*MoveTesting)
         next_move.actual_score = <-next_move.future_score
 
         if next_move.actual_score > best_move.actual_score {
