@@ -73,7 +73,7 @@ func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_po
 }
 
 func DidAnyoneWin(tempArr [3][3]string) (string) {
-    time.Sleep(1 * time.Second)
+    time.Sleep(2 * time.Second)
     for _, whoWon := range [2]string{"X", "O"} {
         for _, item := range [3]int{0,1,2} {
             if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
@@ -110,7 +110,7 @@ func DecideMoveRandom(available *list.List) (string) {
     fmt.Printf("Move for computer is: ")
     fmt.Println(available.Front().Value)
 
-    return available.Front().Value.(string)
+    return available.Front().Value.(*MoveTesting)
 }
 
 func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
@@ -118,16 +118,12 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     // TODO: Loop through all scenarios and determine if winning move available, then return that move
 
     var test_move = available.Front()
-    // fmt.Printf("WHAT IS GOING ON!? %d %s\n", available.Len(), test_move)
     
 
     for test_move != nil && available.Len() > 1 {
         var next_move = test_move.Value.(*MoveTesting)
-        fmt.Printf("%T\n", next_move)
 
         next_move.move_letter = "X"
-
-        fmt.Printf("WHATTTTT %s %s\n", test_move.Value.(*MoveTesting).move_letter, next_move.move_letter)
         
         if test_move.Value.(*MoveTesting).move_letter != next_move.move_letter {
             os.Exit(1)            
@@ -138,33 +134,8 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
         test_move = test_move.Next()
     }
 
-
-    // for test_move != nil && available.Len() > 1 {
-    //     var next_move = test_move.Value.(MoveTesting)
-
-    //     go WouldAnyoneWinStruct(tempArr, next_move)
-
-    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
-    //         return next_move.notation
-    //     }
-
-    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
-    //         blockingMoves.PushFront(next_move)
-    //     }
-
-    //     test_move = test_move.Next()
-
-    //     fmt.Printf("%d blockingMoves\n", blockingMoves.Len())
-    // }
-
-    // if blockingMoves.Len() > 0 {
-    //     fmt.Println("Getting blocking move")
-    //     return blockingMoves.Front().Value.(MoveTesting).notation
-    // }
-
     var best_move = available.Front().Value.(*MoveTesting)
     best_move.actual_score = <-best_move.future_score
-    fmt.Printf("MOREE %d\n", best_move.actual_score)
 
     test_move = available.Front().Next()
     for test_move != nil && available.Len() > 1 {
