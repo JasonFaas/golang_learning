@@ -43,7 +43,7 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
                     y_coor: item_1,
                     move_letter: "_",
                     future_score: make(chan int),
-                    actual_score: -1,
+                    actual_score: 0,
                 }
 
                 l.PushFront(new_move)
@@ -52,6 +52,19 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
     }
     fmt.Println("Availabe Moves Over\n\n")
     return l
+}
+
+func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider MoveTesting) () {
+    var whathwat = 0
+    move_consider.future_score <- whathwat
+
+    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
+    //         return next_move.notation
+    //     }
+
+    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
+    //         blockingMoves.PushFront(next_move)
+    //     }
 }
 
 func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_position_y int, next_move_value string) (string) {
@@ -101,34 +114,64 @@ func DecideMoveRandom(available *list.List) (string) {
 }
 
 func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
-    blockingMoves := list.New()
 
     // TODO: Loop through all scenarios and determine if winning move available, then return that move
 
     var test_move = available.Front()
+
     for test_move != nil && available.Len() > 1 {
         var next_move = test_move.Value.(MoveTesting)
+        next_move.move_letter = "X"
+        fmt.Printf("%s %s \n", next_move.move_letter, test_move.Value.(MoveTesting).move_letter)
 
-        if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
-            return next_move.notation
-        }
+        fmt.Println("About to test another waws")
 
-        if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
-            blockingMoves.PushFront(next_move)
+        go WouldAnyoneWinStruct(tempArr, next_move)
+
+        test_move = test_move.Next()
+    }
+
+
+    // for test_move != nil && available.Len() > 1 {
+    //     var next_move = test_move.Value.(MoveTesting)
+
+    //     go WouldAnyoneWinStruct(tempArr, next_move)
+
+    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
+    //         return next_move.notation
+    //     }
+
+    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
+    //         blockingMoves.PushFront(next_move)
+    //     }
+
+    //     test_move = test_move.Next()
+
+    //     fmt.Printf("%d blockingMoves\n", blockingMoves.Len())
+    // }
+
+    // if blockingMoves.Len() > 0 {
+    //     fmt.Println("Getting blocking move")
+    //     return blockingMoves.Front().Value.(MoveTesting).notation
+    // }
+
+    var best_move = available.Front().Value.(MoveTesting)
+    best_move.actual_score = <-best_move.future_score
+
+    test_move = available.Front()
+    for test_move != nil && available.Len() > 1 {
+        var next_move = test_move.Value.(MoveTesting)
+        next_move.actual_score = <-next_move.future_score
+
+        if next_move.actual_score > best_move.actual_score {
+            best_move = next_move
         }
 
         test_move = test_move.Next()
-
-        fmt.Printf("%d blockingMoves\n", blockingMoves.Len())
-    }
-
-    if blockingMoves.Len() > 0 {
-        fmt.Println("Getting blocking move")
-        return blockingMoves.Front().Value.(MoveTesting).notation
     }
 
     // All moves of equal value, return first move in list
-    return available.Front().Value.(MoveTesting).notation
+    return best_move.notation
 }
 
 
