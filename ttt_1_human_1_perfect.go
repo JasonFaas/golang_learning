@@ -55,7 +55,7 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
 }
 
 func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting) () {
-    var whathwat = 3
+    var whathwat = rand.Intn(8) - 10
     move_consider.future_score <- whathwat
 
     //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
@@ -95,7 +95,7 @@ func DidAnyoneWin(tempArr [3][3]string) (string) {
     return "_"
 }
 
-func DecideMoveRandom(available *list.List) (string) {
+func DecideMoveRandom(available *list.List) (*MoveTesting) {
     var move_to_make_itr = rand.Intn(available.Len())
     fmt.Printf("Move to make random %d\n", move_to_make_itr)
     
@@ -183,8 +183,6 @@ func main() {
                 fmt.Println("No avilable moves")
                 break
             }
-
-            // next_move = DecideMoveRandom(available)
             next_move = DecideMoveIfWinningOrRandom(available, tttArr)
         } else {
             fmt.Println("What position for O? ")            
