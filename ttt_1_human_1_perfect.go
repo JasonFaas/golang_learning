@@ -122,9 +122,10 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     for test_move != nil && available.Len() > 1 {
         var next_move = test_move.Value.(MoveTesting)
         next_move.move_letter = "X"
-        fmt.Printf("%s %s \n", next_move.move_letter, test_move.Value.(MoveTesting).move_letter)
-
-        fmt.Println("About to test another waws")
+        fmt.Printf("Should be equal: %s %s \n", next_move.move_letter, test_move.Value.(MoveTesting).move_letter)
+        if next_move.move_letter != test_move.Value.(MoveTesting).move_letter {
+            os.Exit(1)
+        }
 
         go WouldAnyoneWinStruct(tempArr, next_move)
 
