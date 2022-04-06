@@ -55,22 +55,18 @@ func ListAvailableMoves(tempArr [3][3]string) (*list.List) {
 }
 
 func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting) () {
-    var result = rand.Intn(8) - 10
+    var result = 0
     
 
     fmt.Println("Fix this method!!")
 
-    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "X") == "X" {
-    //         return next_move.notation
-    //     }
-
-    //     if WouldAnyoneWin(tempArr, next_move.x_coor, next_move.y_coor, "O") == "O" {
-    //         blockingMoves.PushFront(next_move)
-    //     }
+    if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "X") == "X" {
+        result = 100
+    } else if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "O") == "O" {
+        result = 50
+    }
 
 
-    os.Exit(19)
-    
     move_consider.future_score <- result
 
 }
@@ -81,7 +77,7 @@ func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_po
 }
 
 func DidAnyoneWin(tempArr [3][3]string) (string) {
-    time.Sleep(2 * time.Second)
+    time.Sleep(1 * time.Second)
     for _, whoWon := range [2]string{"X", "O"} {
         for _, item := range [3]int{0,1,2} {
             if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
@@ -151,6 +147,8 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
         next_move.actual_score = <-next_move.future_score
 
         if next_move.actual_score > best_move.actual_score {
+            best_move = next_move
+        } else if next_move.actual_score == best_move.actual_score && rand.Intn(2) == 1 {
             best_move = next_move
         }
 
@@ -222,6 +220,9 @@ func main() {
         PrintTableState(tttArr)
 
         winner = DidAnyoneWin(tttArr)
+        if winner != "_" {
+            break
+        }
 
         available = ListAvailableMoves(tttArr)
     }
