@@ -220,7 +220,6 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
 
 
 func main() {
-
     reader := bufio.NewReader(os.Stdin)
 
     // double 3x3 array
@@ -250,7 +249,7 @@ func main() {
             }
             next_move = DecideMoveIfWinningOrRandom(available, tttArr)
         } else {
-            fmt.Println("What position for O? ")            
+            fmt.Println("What position for O? ")
 
             fmt.Println("Put next move in format \"D3\"")
 
@@ -291,49 +290,4 @@ func main() {
     } else {
         fmt.Printf("Tie :(\n")
     }
-
-    // exit program
-
-
-    // TODO: V2
-
-    // keep running program until a winner occurs, max <input> times
-
-
-    // TODO: V3
-
-    // able to run this program more quickly with threads or processes?
-
-
-    // TODO: v4
-
-    // play against self
-
-
-    // TODO: v5 
-
-    // play against computer that never loses
-
-
-
-
-
-
-
-    // // Accept input
-    // reader := bufio.NewReader(os.Stdin)
-    // fmt.Print("What is your move? ")
-    // next_move, _ := reader.ReadString('\n')
-
-    // // Only stop accepting input on string "exit"
-    // for next_move != "exit\n" {
-    //     fmt.Print("You moved to " + next_move)
-
-    //     fmt.Println()
-    //     fmt.Print("What is your move? ")
-    //     next_move, _ = reader.ReadString('\n')
-    // }
-
-
 }
-
