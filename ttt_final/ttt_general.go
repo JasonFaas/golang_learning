@@ -106,3 +106,24 @@ func InitTable() ([3][3]string) {
 func IsHumanTurn(human_count string, human_turn string, next_turn string) (bool) {
     return human_count == "2" || (human_count == "1" && human_turn == next_turn)
 }
+
+func transformHumanInputToStruct(stringInput string) (*MoveTesting) {
+    var new_move = MoveTesting{
+        notation: stringInput,
+        x_coor: int(stringInput[1]-48),
+        y_coor: int(stringInput[0]-65),
+        move_letter: "_",
+        future_score: make(chan int),
+        actual_score: 0,
+    }
+
+    return &new_move
+}
+
+func GetNextTurnLetter(next_turn_letter string) (string) {
+    if next_turn_letter == X_INPUT {
+        return O_INPUT
+    } else {
+        return X_INPUT
+    }
+}

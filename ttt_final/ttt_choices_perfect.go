@@ -30,11 +30,12 @@ func main() {
     var next_turn_letter = X_INPUT
     // var available = list.New() //ListAvailableMoves(tttArr, true)
     var winner = "_"
-    var next_move_pos = "---"
+    var next_move_struct *MoveTesting
     for winner == "_" { //&& available.Len() > 0 {
         if IsHumanTurn(human_count, human_turn, next_turn_letter) {
-            next_move_pos = GetHumanInput(next_turn_letter)
+            next_move_struct = GetHumanInput(next_turn_letter)
         } else {
+            // next_move_struct = GetBotInput(next_turn_letter)
             os.Exit(99)
         }
 
@@ -50,16 +51,14 @@ func main() {
         //     next_move = DecideMoveIfWinningOrRandom(available, tttArr)
         // }
 
-        if tttArr[next_move_pos[1]-48][next_move_pos[0]-65] != "_" {
-            fmt.Printf("Not a valid position: %s %s\n", next_move_pos, tttArr[next_move_pos[1]-48][next_move_pos[0]-65])
-        } else if next_turn_letter == X_INPUT {
-            tttArr[next_move_pos[1]-48][next_move_pos[0]-65] = next_turn_letter
-            next_turn_letter = "O"
-        } else {
-            tttArr[next_move_pos[1]-48][next_move_pos[0]-65] = next_turn_letter
-            next_turn_letter = "X"
+        if tttArr[next_move_struct.x_coor][next_move_struct.y_coor] != "_" {
+            fmt.Printf("Not a valid position: %s %s\n", next_move_struct.notation)
+            os.Exit(63)
         }
+        
+        tttArr[next_move_struct.x_coor][next_move_struct.y_coor] = next_turn_letter
 
+        next_turn_letter = GetNextTurnLetter(next_turn_letter)
 
         PrintTableState(tttArr)
 

@@ -32,7 +32,7 @@ func WhichTurnIsHuman() (string) {
     return return_string
 }
 
-func GetHumanInput(next_turn string) (string) {
+func GetHumanInput(next_turn string) (*MoveTesting) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("What position for %s?\n", next_turn)
 
@@ -48,5 +48,7 @@ func GetHumanInput(next_turn string) (string) {
         os.Exit(33)
     }
 
-    return next_move_pos
+    var moveTestStructPos = transformHumanInputToStruct(next_move_pos)
+
+    return moveTestStructPos
 }
