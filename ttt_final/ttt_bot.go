@@ -12,14 +12,13 @@ import (
 
 func GetBotInput(tempArr [3][3]string, next_turn_letter string, first_move bool) (*MoveTesting) {
     var availableMoves = ListAvailableMoves(tempArr, first_move)
-    var move_to_make = DecideMoveRandom(availableMoves)
+    // var move_to_make = DecideMoveRandom(availableMoves)
+
+    var move_to_make = DecideMoveIfWinningOrRandom(available, tempArr, next_turn_letter)
 
     os.Exit(55)
-    // var move_to_make = DecideMoveIfWinningOrRandom(available, tempArr, next_turn_letter)
 
     return move_to_make
-
-
 }
 
 func ListAvailableMoves(tempArr [3][3]string, board_open bool) (*list.List) {
@@ -53,110 +52,111 @@ func ListAvailableMoves(tempArr [3][3]string, board_open bool) (*list.List) {
 }
 
 
-func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting, otherMoves *list.List) () {
-    var result = 0
+// func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting, otherMoves *list.List) () {
+//     var result = 0
 
 
-    // TODO: these should be gorountines as well
-    if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "X") == "X" {
-        result = 100
-    } else if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "O") == "O" {
-        result = 50
-    } else {
-        // TODO: One more step down based on otherMoves
-        // Assuming:
-        // * otherMoves.Len() > 2
-        // * computer goes at indicated location
-        // * human goes at list of other locations
-        // How many positions remain where computer wins? (this is perfect, go here)
-        // How many positions remain where human wins? (block this MOVE!)
-        tempArr[move_consider.x_coor][move_consider.y_coor] = "X"
+//     // TODO: these should be gorountines as well
+//     if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "X") == "X" {
+//         result = 100
+//     } else if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "O") == "O" {
+//         result = 50
+//     } else {
+//         // TODO: One more step down based on otherMoves
+//         // Assuming:
+//         // * otherMoves.Len() > 2
+//         // * computer goes at indicated location
+//         // * human goes at list of other locations
+//         // How many positions remain where computer wins? (this is perfect, go here)
+//         // How many positions remain where human wins? (block this MOVE!)
+//         tempArr[move_consider.x_coor][move_consider.y_coor] = "X"
         
-        //////////////////////// TODO: otherMoves is still not VALID!!! though maybe can just check if already filled in
-        var human_test_move = otherMoves.Front()
-        fmt.Println("Starting List")
-        for human_test_move != nil && otherMoves.Len() > 1 {
-            fmt.Println("1sttt")
-            var human_move = human_test_move.Value.(*MoveTesting)
+//         //////////////////////// TODO: otherMoves is still not VALID!!! though maybe can just check if already filled in
+//         var human_test_move = otherMoves.Front()
+//         fmt.Println("Starting List")
+//         for human_test_move != nil && otherMoves.Len() > 1 {
+//             fmt.Println("1sttt")
+//             var human_move = human_test_move.Value.(*MoveTesting)
 
-            if human_move.x_coor == move_consider.x_coor && human_move.x_coor == move_consider.y_coor {
-                human_test_move = human_test_move.Next()
-                continue
-            }
-            tempArr[human_move.x_coor][human_move.y_coor] = "O"
+//             if human_move.x_coor == move_consider.x_coor && human_move.x_coor == move_consider.y_coor {
+//                 human_test_move = human_test_move.Next()
+//                 continue
+//             }
+//             tempArr[human_move.x_coor][human_move.y_coor] = "O"
             
-            var second_cmp_move = otherMoves.Front()
-            for second_cmp_move != nil {
-                fmt.Println("2nd")
-                var cmp_move = second_cmp_move.Value.(*MoveTesting)
-                if cmp_move.x_coor == move_consider.x_coor && cmp_move.x_coor == move_consider.y_coor || human_move.x_coor == cmp_move.x_coor && human_move.x_coor == cmp_move.y_coor {
-                    second_cmp_move = second_cmp_move.Next()
-                    continue
-                }
-                tempArr[cmp_move.x_coor][cmp_move.y_coor] = "X"
+//             var second_cmp_move = otherMoves.Front()
+//             for second_cmp_move != nil {
+//                 fmt.Println("2nd")
+//                 var cmp_move = second_cmp_move.Value.(*MoveTesting)
+//                 if cmp_move.x_coor == move_consider.x_coor && cmp_move.x_coor == move_consider.y_coor || human_move.x_coor == cmp_move.x_coor && human_move.x_coor == cmp_move.y_coor {
+//                     second_cmp_move = second_cmp_move.Next()
+//                     continue
+//                 }
+//                 tempArr[cmp_move.x_coor][cmp_move.y_coor] = "X"
 
-                if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "X") == "X" {
-                    result += 5
-                } else if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "O") == "O" {
-                    result -= 10
-                }
+//                 if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "X") == "X" {
+//                     result += 5
+//                 } else if WouldAnyoneWin(tempArr, move_consider.x_coor, move_consider.y_coor, "O") == "O" {
+//                     result -= 10
+//                 }
 
-                tempArr[cmp_move.x_coor][cmp_move.y_coor] = "_"
+//                 tempArr[cmp_move.x_coor][cmp_move.y_coor] = "_"
 
-                second_cmp_move = second_cmp_move.Next()
-            }
+//                 second_cmp_move = second_cmp_move.Next()
+//             }
                 
 
-            tempArr[human_move.x_coor][human_move.y_coor] = "_"
+//             tempArr[human_move.x_coor][human_move.y_coor] = "_"
 
-            human_test_move = human_test_move.Next()
-        } 
-    }
+//             human_test_move = human_test_move.Next()
+//         } 
+//     }
 
-    move_consider.future_score <- result
+//     move_consider.future_score <- result
 
-}
+// }
 
-func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_position_y int, next_move_value string) (string) {
-    tempArr[next_move_position_x][next_move_position_y] = next_move_value
-    return DidAnyoneWin(tempArr)
-}
+// func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_position_y int, next_move_value string) (string) {
+//     tempArr[next_move_position_x][next_move_position_y] = next_move_value
+//     return DidAnyoneWin(tempArr)
+// }
 
 
 
-func DecideMoveRandom(available *list.List) (*MoveTesting) {
-    var move_to_make_itr = rand.Intn(available.Len())
-    fmt.Printf("Move to make random %d\n", move_to_make_itr)
+// func DecideMoveRandom(available *list.List) (*MoveTesting) {
+//     var move_to_make_itr = rand.Intn(available.Len())
+//     fmt.Printf("Move to make random %d\n", move_to_make_itr)
     
 
-    for move_to_make_itr > 0 {
-        // fmt.Printf("Removing element %d\n", move_to_make_itr)
-        available.Remove(available.Front())
-        move_to_make_itr -= 1
-    }
+//     for move_to_make_itr > 0 {
+//         // fmt.Printf("Removing element %d\n", move_to_make_itr)
+//         available.Remove(available.Front())
+//         move_to_make_itr -= 1
+//     }
 
 
-    fmt.Printf("Move for computer is: ")
-    fmt.Println(available.Front().Value)
+//     fmt.Printf("Move for computer is: ")
+//     fmt.Println(available.Front().Value)
 
-    return available.Front().Value.(*MoveTesting)
-}
+//     return available.Front().Value.(*MoveTesting)
+// }
 
 
 
-func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
+func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string, next_turn_letter string) (string) {
     
     var test_move = available.Front()
-    for test_move != nil && available.Len() > 1 {
+    for test_move != nil {
         var next_move = test_move.Value.(*MoveTesting)
 
-        next_move.move_letter = "X"
+        next_move.move_letter = next_turn_letter
         
+        // Simple check of reference update
         if test_move.Value.(*MoveTesting).move_letter != next_move.move_letter {
             os.Exit(1)            
         }
 
-        go WouldAnyoneWinStruct(tempArr, next_move, available)
+        go WhoWinGoRoutine(tempArr, next_move, available)
 
         test_move = test_move.Next()
     }
@@ -165,7 +165,7 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     best_move.actual_score = <-best_move.future_score
 
     test_move = available.Front().Next()
-    for test_move != nil && available.Len() > 1 {
+    for test_move != nil {
         var next_move = test_move.Value.(*MoveTesting)
         next_move.actual_score = <-next_move.future_score
 
@@ -179,6 +179,6 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     }
 
     // All moves of equal value, return first move in list
-    return best_move.notation
+    return best_move
 }
 
