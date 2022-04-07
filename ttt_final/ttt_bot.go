@@ -1,11 +1,11 @@
 package main
 
 import (
-    "fmt"   
+    // "fmt"   
     "math/rand"
     // "time"
     // "bufio"
-    "os"
+    // "os"
     "container/list"
     // "strings"
 )
@@ -20,7 +20,7 @@ func GetBotInput(tempArr [3][3]string, next_turn_letter string, first_move bool)
 }
 
 func ListAvailableMoves(tempArr [3][3]string, board_open bool, next_turn_letter string) (*list.List) {
-    fmt.Println("Availabe Moves:")
+    // fmt.Println("Availabe Moves:")
     l := list.New()
 
     for _, item_1 := range [3]int{0,1,2} {
@@ -30,7 +30,7 @@ func ListAvailableMoves(tempArr [3][3]string, board_open bool, next_turn_letter 
                 if board_open && !(temp_string == "A0" || temp_string == "A1" || temp_string == "B1") {
                     continue
                 }
-                fmt.Println(temp_string)
+                // fmt.Println(temp_string)
 
                 var new_move = MoveTesting{
                     notation: temp_string,
@@ -45,7 +45,7 @@ func ListAvailableMoves(tempArr [3][3]string, board_open bool, next_turn_letter 
             }
         }
     }
-    fmt.Println("Availabe Moves Over\n\n")
+    // fmt.Println("Availabe Moves Over\n\n")
     return l
 }
 
@@ -55,8 +55,12 @@ func WhoWinGoRoutine(tempArr [3][3]string, move_consider *MoveTesting) () {
 
     tempArr[move_consider.x_coor][move_consider.y_coor] = move_consider.move_letter
 
-    if DidAnyoneWin(tempArr) == move_consider.move_letter {
+    var thisMoveResult = DidAnyoneWin(tempArr)
+
+    if thisMoveResult == move_consider.move_letter {
         result = 1
+    } else if thisMoveResult == "0" {
+        result = 0
     } else {
         var whatwhat = GetBotInput(tempArr, GetNextTurnLetter(move_consider.move_letter), false)
         result = whatwhat.actual_score * -1

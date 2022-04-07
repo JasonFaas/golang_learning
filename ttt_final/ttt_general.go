@@ -3,7 +3,7 @@ package main
 import (
     "fmt"   
     // "math/rand"
-    // "time"
+    "time"
     // "bufio"
     // "os"
     // "container/list"
@@ -39,7 +39,7 @@ func PrintTableState(tempArr [3][3]string) () {
 
 
 func DidAnyoneWin(tempArr [3][3]string) (string) {
-    // time.Sleep(1 * time.Second)
+    time.Sleep(1 * time.Second)
     for _, whoWon := range [2]string{"X", "O"} {
         for _, item := range [3]int{0,1,2} {
             if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
