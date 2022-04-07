@@ -41,9 +41,6 @@ func main() {
         }
 
 
-
-        // os.Exit(88)
-
         // if next_turn == "X" {            
 
         //     if available.Len() == 0 {
@@ -68,11 +65,9 @@ func main() {
         if winner != "_" {
             break
         }
-
-        // available = ListAvailableMoves(tttArr, false)
     }
 
-    if winner != "_" {
+    if winner == X_INPUT || winner == O_INPUT {
         fmt.Printf("%s won!!!\n", winner)
     } else {
         fmt.Printf("Tie :(\n")

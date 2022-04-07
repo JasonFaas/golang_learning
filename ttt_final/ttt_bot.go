@@ -19,7 +19,6 @@ func ListAvailableMoves(tempArr [3][3]string, board_open bool) (*list.List) {
     fmt.Println("Availabe Moves:")
     l := list.New()
 
-
     for _, item_1 := range [3]int{0,1,2} {
         for _, item_2 := range [3]int{0,1,2} {
             if tempArr[item_2][item_1] == "_" {

@@ -57,8 +57,23 @@ func DidAnyoneWin(tempArr [3][3]string) (string) {
             return whoWon
         }
     }
+
+    var available = 0
+
+    for x, _ := range [3]int{0,1,2} {
+        for y, _ := range [3]int{0,1,2} {
+            if tempArr[x][y] == "_" {
+                available += 1
+            }
+        }
+    }
     
-    return "_"
+    if available > 0 {
+        return "_"
+    } else {
+        return "0"        
+    }
+
 }
 
 func InitTable() ([3][3]string) {
