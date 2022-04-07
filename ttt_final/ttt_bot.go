@@ -11,12 +11,10 @@ import (
 )
 
 func GetBotInput(tempArr [3][3]string, next_turn_letter string, first_move bool) (*MoveTesting) {
-    var availableMoves = ListAvailableMoves(tempArr, first_move)
+    var availableMoves = ListAvailableMoves(tempArr, first_move, next_turn_letter)
     // var move_to_make = DecideMoveRandom(availableMoves)
 
     var move_to_make = DecideMoveIfWinningOrRandom(availableMoves, tempArr)
-
-    os.Exit(55)
 
     return move_to_make
 }
@@ -52,15 +50,15 @@ func ListAvailableMoves(tempArr [3][3]string, board_open bool, next_turn_letter 
 }
 
 
-func WhoWinGoRoutine(tempArr [3][3]string, move_consider *MoveTesting, otherMoves *list.List) () {
+func WhoWinGoRoutine(tempArr [3][3]string, move_consider *MoveTesting) () {
     var result = 0
 
-    tttArr[move_consider.x_coor][move_consider.y_coor] = move_consider.next_turn_letter
+    tempArr[move_consider.x_coor][move_consider.y_coor] = move_consider.move_letter
 
-    if DidAnyoneWin(tempArr) == move_consider.next_turn_letter {
+    if DidAnyoneWin(tempArr) == move_consider.move_letter {
         result = 1
     } else {
-        var whatwhat = GetBotInput(tempArr, GetNextTurnLetter(move_consider.next_turn_letter), false)
+        var whatwhat = GetBotInput(tempArr, GetNextTurnLetter(move_consider.move_letter), false)
         result = whatwhat.actual_score * -1
     }
     move_consider.future_score <- result

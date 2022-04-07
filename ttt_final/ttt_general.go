@@ -3,7 +3,7 @@ package main
 import (
     "fmt"   
     // "math/rand"
-    "time"
+    // "time"
     // "bufio"
     // "os"
     // "container/list"
