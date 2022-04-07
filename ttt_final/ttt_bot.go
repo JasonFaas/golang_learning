@@ -3,61 +3,12 @@ package main
 import (
     "fmt"   
     "math/rand"
-    "time"
-    "bufio"
+    // "time"
+    // "bufio"
     "os"
     "container/list"
     // "strings"
 )
-
-type MoveTesting struct {
-    notation string
-    x_coor int
-    y_coor int
-    move_letter string
-    future_score chan int
-    actual_score int
-}
-
-func PrintTableState(tempArr [3][3]string) () {
-    fmt.Println("   A B C")
-    for itr, _ := range tempArr {
-        fmt.Printf("%d", itr)
-        fmt.Printf(" ")
-        fmt.Println(tempArr[itr])
-    }
-}
-
-func ListAvailableMoves(tempArr [3][3]string, board_open bool) (*list.List) {
-    fmt.Println("Availabe Moves:")
-    l := list.New()
-
-
-    for _, item_1 := range [3]int{0,1,2} {
-        for _, item_2 := range [3]int{0,1,2} {
-            if tempArr[item_2][item_1] == "_" {
-                var temp_string = string(item_1 + 65) + string(item_2 + 48)
-                if board_open && !(temp_string == "A0" || temp_string == "A1" || temp_string == "B1") {
-                    continue
-                }
-                fmt.Println(temp_string)
-
-                var new_move = MoveTesting{
-                    notation: temp_string,
-                    x_coor: item_2,
-                    y_coor: item_1,
-                    move_letter: "_",
-                    future_score: make(chan int),
-                    actual_score: 0,
-                }
-
-                l.PushFront(&new_move)
-            }
-        }
-    }
-    fmt.Println("Availabe Moves Over\n\n")
-    return l
-}
 
 func WouldAnyoneWinStruct(tempArr [3][3]string, move_consider *MoveTesting, otherMoves *list.List) () {
     var result = 0
@@ -128,28 +79,7 @@ func WouldAnyoneWin(tempArr [3][3]string, next_move_position_x int, next_move_po
     return DidAnyoneWin(tempArr)
 }
 
-func DidAnyoneWin(tempArr [3][3]string) (string) {
-    time.Sleep(1 * time.Second)
-    for _, whoWon := range [2]string{"X", "O"} {
-        for _, item := range [3]int{0,1,2} {
-            if tempArr[item][0] == whoWon && tempArr[item][1] == whoWon && tempArr[item][2] == whoWon {
-                return whoWon
-            }
-            if tempArr[0][item] == whoWon && tempArr[1][item] == whoWon && tempArr[2][item] == whoWon {
-                return whoWon
-            }
-        }
 
-        if tempArr[0][0] == whoWon && tempArr[1][1] == whoWon && tempArr[2][2] == whoWon {
-            return whoWon
-        }
-        if tempArr[0][2 - 0] == whoWon && tempArr[1][2 - 1] == whoWon && tempArr[2][2 - 2] == whoWon {
-            return whoWon
-        }
-    }
-    
-    return "_"
-}
 
 func DecideMoveRandom(available *list.List) (*MoveTesting) {
     var move_to_make_itr = rand.Intn(available.Len())
@@ -168,6 +98,8 @@ func DecideMoveRandom(available *list.List) (*MoveTesting) {
 
     return available.Front().Value.(*MoveTesting)
 }
+
+
 
 func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
 
@@ -218,76 +150,3 @@ func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (st
     return best_move.notation
 }
 
-
-func main() {
-    reader := bufio.NewReader(os.Stdin)
-
-    // double 3x3 array
-    var tttArr [3][3]string
-
-    // random population of array with blank/X/O
-    rand.Seed(time.Now().UnixNano())
-    for vk, v := range tttArr {
-        for vvk, _ := range v {
-            tttArr[vk][vvk] = "_"
-        }
-    }
-
-    PrintTableState(tttArr)
-
-    // Loop for turns
-    var next_turn = "X"
-    var available = ListAvailableMoves(tttArr, true)
-    var winner = "_"
-    for winner == "_" && available.Len() > 0 {
-        var next_move = ""
-        if next_turn == "X" {            
-
-            if available.Len() == 0 {
-                fmt.Println("No avilable moves")
-                break
-            }
-            next_move = DecideMoveIfWinningOrRandom(available, tttArr)
-        } else {
-            fmt.Println("What position for O? ")
-
-            fmt.Println("Put next move in format \"D3\"")
-
-            read_string, _ := reader.ReadString('\n')
-            next_move = read_string
-            fmt.Printf("Next human move is %s\n", next_move)
-
-            fmt.Printf("")
-
-            if next_move == "Exit\n" {
-                break
-            }
-        }
-
-        if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
-            fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
-        } else if next_turn == "X" {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "O"
-        } else {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "X"
-        }
-
-
-        PrintTableState(tttArr)
-
-        winner = DidAnyoneWin(tttArr)
-        if winner != "_" {
-            break
-        }
-
-        available = ListAvailableMoves(tttArr, false)
-    }
-
-    if winner != "_" {
-        fmt.Printf("%s won!!!\n", winner)
-    } else {
-        fmt.Printf("Tie :(\n")
-    }
-}
