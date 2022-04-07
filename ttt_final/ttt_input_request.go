@@ -31,3 +31,22 @@ func WhichTurnIsHuman() (string) {
 	}
     return return_string
 }
+
+func GetHumanInput(next_turn string) (string) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Printf("What position for %s?\n", next_turn)
+
+    fmt.Println("Put next move in format \"D3\"")
+
+    read_string, _ := reader.ReadString('\n')
+    var next_move_pos = read_string
+    fmt.Printf("Next human move is %s\n", next_move_pos)
+
+    fmt.Printf("")
+
+    if next_move_pos == "Exit\n" {
+        os.Exit(33)
+    }
+
+    return next_move_pos
+}

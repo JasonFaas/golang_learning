@@ -102,3 +102,7 @@ func InitTable() ([3][3]string) {
 
     return returnMe
 }
+
+func IsHumanTurn(human_count string, human_turn string, next_turn string) (bool) {
+    return human_count == "2" || (human_count == "1" && human_turn == next_turn)
+}

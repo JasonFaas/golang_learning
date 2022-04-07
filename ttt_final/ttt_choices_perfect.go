@@ -4,15 +4,14 @@ import (
     "fmt"   
     "math/rand"
     "time"
-    "bufio"
+    // "bufio"
     "os"
-    // "container/list"
+    "container/list"
     // "strings"
 )
 
 
 func main() {
-    reader := bufio.NewReader(os.Stdin)
     rand.Seed(time.Now().UnixNano())
 
     var tttArr [3][3]string = InitTable()
@@ -27,13 +26,21 @@ func main() {
 
     fmt.Printf("%s %s\n", human_count, human_turn)
 
-    os.Exit(0)
-
     // Loop for turns
-    var next_turn = "X"
-    var available = ListAvailableMoves(tttArr, true)
+    var next_turn = X_INPUT
+    var available = list.New() //ListAvailableMoves(tttArr, true)
     var winner = "_"
-    for winner == "_" && available.Len() > 0 {
+    for winner == "_" { //&& available.Len() > 0 {
+        if IsHumanTurn(human_count, human_turn, next_turn) {
+            var humanInput = GetHumanInput(next_turn)
+            fmt.Printf("%s", humanInput)
+        } else {
+            os.Exit(99)
+        }
+
+
+        os.Exit(88)
+
         var next_move = ""
         if next_turn == "X" {            
 
@@ -43,19 +50,19 @@ func main() {
             }
             next_move = DecideMoveIfWinningOrRandom(available, tttArr)
         } else {
-            fmt.Println("What position for O? ")
+            // fmt.Println("What position for O? ")
 
-            fmt.Println("Put next move in format \"D3\"")
+            // fmt.Println("Put next move in format \"D3\"")
 
-            read_string, _ := reader.ReadString('\n')
-            next_move = read_string
-            fmt.Printf("Next human move is %s\n", next_move)
+            // read_string, _ := reader.ReadString('\n')
+            // next_move = read_string
+            // fmt.Printf("Next human move is %s\n", next_move)
 
-            fmt.Printf("")
+            // fmt.Printf("")
 
-            if next_move == "Exit\n" {
-                break
-            }
+            // if next_move == "Exit\n" {
+            //     break
+            // }
         }
 
         if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
