@@ -31,13 +31,15 @@ func main() {
     // var available = list.New() //ListAvailableMoves(tttArr, true)
     var winner = "_"
     var next_move_struct *MoveTesting
+    var first_move = true
     for winner == "_" { //&& available.Len() > 0 {
         if IsHumanTurn(human_count, human_turn, next_turn_letter) {
             next_move_struct = GetHumanInput(next_turn_letter)
         } else {
-            // next_move_struct = GetBotInput(next_turn_letter)
-            os.Exit(99)
+            next_move_struct = GetBotInput(tttArr, next_turn_letter, first_move)
+            first_move = false
         }
+
 
 
         // os.Exit(88)
