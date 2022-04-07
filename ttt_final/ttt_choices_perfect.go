@@ -6,7 +6,7 @@ import (
     "time"
     // "bufio"
     "os"
-    "container/list"
+    // "container/list"
     // "strings"
 )
 
@@ -27,52 +27,37 @@ func main() {
     fmt.Printf("%s %s\n", human_count, human_turn)
 
     // Loop for turns
-    var next_turn = X_INPUT
-    var available = list.New() //ListAvailableMoves(tttArr, true)
+    var next_turn_letter = X_INPUT
+    // var available = list.New() //ListAvailableMoves(tttArr, true)
     var winner = "_"
+    var next_move_pos = "---"
     for winner == "_" { //&& available.Len() > 0 {
-        if IsHumanTurn(human_count, human_turn, next_turn) {
-            var humanInput = GetHumanInput(next_turn)
-            fmt.Printf("%s", humanInput)
+        if IsHumanTurn(human_count, human_turn, next_turn_letter) {
+            next_move_pos = GetHumanInput(next_turn_letter)
         } else {
             os.Exit(99)
         }
 
 
-        os.Exit(88)
+        // os.Exit(88)
 
-        var next_move = ""
-        if next_turn == "X" {            
+        // if next_turn == "X" {            
 
-            if available.Len() == 0 {
-                fmt.Println("No avilable moves")
-                break
-            }
-            next_move = DecideMoveIfWinningOrRandom(available, tttArr)
+        //     if available.Len() == 0 {
+        //         fmt.Println("No avilable moves")
+        //         break
+        //     }
+        //     next_move = DecideMoveIfWinningOrRandom(available, tttArr)
+        // }
+
+        if tttArr[next_move_pos[1]-48][next_move_pos[0]-65] != "_" {
+            fmt.Printf("Not a valid position: %s %s\n", next_move_pos, tttArr[next_move_pos[1]-48][next_move_pos[0]-65])
+        } else if next_turn_letter == X_INPUT {
+            tttArr[next_move_pos[1]-48][next_move_pos[0]-65] = next_turn_letter
+            next_turn_letter = "O"
         } else {
-            // fmt.Println("What position for O? ")
-
-            // fmt.Println("Put next move in format \"D3\"")
-
-            // read_string, _ := reader.ReadString('\n')
-            // next_move = read_string
-            // fmt.Printf("Next human move is %s\n", next_move)
-
-            // fmt.Printf("")
-
-            // if next_move == "Exit\n" {
-            //     break
-            // }
-        }
-
-        if tttArr[next_move[1]-48][next_move[0]-65] != "_" {
-            fmt.Printf("Not a valid position: %s %s\n", next_move, tttArr[next_move[1]-48][next_move[0]-65])
-        } else if next_turn == "X" {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "O"
-        } else {
-            tttArr[next_move[1]-48][next_move[0]-65] = next_turn
-            next_turn = "X"
+            tttArr[next_move_pos[1]-48][next_move_pos[0]-65] = next_turn_letter
+            next_turn_letter = "X"
         }
 
 
@@ -83,7 +68,7 @@ func main() {
             break
         }
 
-        available = ListAvailableMoves(tttArr, false)
+        // available = ListAvailableMoves(tttArr, false)
     }
 
     if winner != "_" {
