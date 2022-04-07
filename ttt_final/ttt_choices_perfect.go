@@ -40,16 +40,6 @@ func main() {
             first_move = false
         }
 
-
-        // if next_turn == "X" {            
-
-        //     if available.Len() == 0 {
-        //         fmt.Println("No avilable moves")
-        //         break
-        //     }
-        //     next_move = DecideMoveIfWinningOrRandom(available, tttArr)
-        // }
-
         if tttArr[next_move_struct.x_coor][next_move_struct.y_coor] != "_" {
             fmt.Printf("Not a valid position: %s %s\n", next_move_struct.notation)
             os.Exit(63)

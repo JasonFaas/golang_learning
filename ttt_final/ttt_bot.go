@@ -12,7 +12,14 @@ import (
 
 func GetBotInput(tempArr [3][3]string, next_turn_letter string, first_move bool) (*MoveTesting) {
     var availableMoves = ListAvailableMoves(tempArr, first_move)
-    return DecideMoveRandom(availableMoves)
+    var move_to_make = DecideMoveRandom(availableMoves)
+
+    os.Exit(55)
+    // var move_to_make = DecideMoveIfWinningOrRandom(available, tempArr, next_turn_letter)
+
+    return move_to_make
+
+
 }
 
 func ListAvailableMoves(tempArr [3][3]string, board_open bool) (*list.List) {
@@ -138,17 +145,6 @@ func DecideMoveRandom(available *list.List) (*MoveTesting) {
 
 
 func DecideMoveIfWinningOrRandom(available *list.List, tempArr [3][3]string) (string) {
-
-    // TODO: Loop through all scenarios and determine if winning move available, then return that move
-
-    
-    // var otherMoves = 
-
-    // var notTheseMoves := list.New()
-    // var temp_move = available.Front()
-    // for temp_move != nil && available.Len() > 1 {
-    //     otherMoves.PushFront(available.Front().Value)
-    // }
     
     var test_move = available.Front()
     for test_move != nil && available.Len() > 1 {
